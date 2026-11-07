@@ -1,8 +1,10 @@
 """Check user-visible output and recovery after invalid input."""
+
 import io
 import unittest
 from contextlib import redirect_stdout
 from unittest.mock import patch
+
 from book_manager.main import run_demo, run_menu
 
 
@@ -15,8 +17,24 @@ class ConsoleTests(unittest.TestCase):
         self.assertIn("Кобзар", output.getvalue())
 
     def test_menu_operations(self):
-        commands = ["1", "5", "6", "2", "Книга", "Автор", "2020", "100",
-                    "3", "автор", "4", "2020", "5", "6", "7", "0"]
+        commands = [
+            "1",
+            "5",
+            "6",
+            "2",
+            "Книга",
+            "Автор",
+            "2020",
+            "100",
+            "3",
+            "автор",
+            "4",
+            "2020",
+            "5",
+            "6",
+            "7",
+            "0",
+        ]
         output = io.StringIO()
         with patch("builtins.input", side_effect=commands), redirect_stdout(output):
             run_menu()
@@ -32,5 +50,8 @@ class ConsoleTests(unittest.TestCase):
         self.assertIn("Помилка", output.getvalue())
 
     def test_eof(self):
-        with patch("builtins.input", side_effect=EOFError), redirect_stdout(io.StringIO()):
+        with (
+            patch("builtins.input", side_effect=EOFError),
+            redirect_stdout(io.StringIO()),
+        ):
             run_menu()
